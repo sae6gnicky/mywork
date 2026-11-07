@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 웹앱 & 사이트 모음집</title>
+  <style>
+    /* 세련된 컬러 팔레트 변수 설정 */
+    :root {
+      --theme-navy: #2B3A4C; /* 고급스러운 네이비 */
+      --theme-beige: #EAE6DF; /* 차분한 웜 베이지 */
+      --theme-white: #FFFFFF;
+      --btn-blue: #4A90E2;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: #D1D5DB;
+      margin: 0;
+      padding: 3vh 3vw;
+      color: #333;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 94vh;
+    }
+
+    /* 레트로 윈도우 창 프레임 */
+    .os-window {
+      width: 100%;
+      max-width: 1400px;
+      height: 90vh;
+      background-color: var(--theme-beige);
+      border: 6px solid var(--theme-navy);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 10px 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* 윈도우 상단 타이틀바 */
+    .os-titlebar {
+      background-color: var(--theme-navy);
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .os-btn {
+      width: 30px;
+      height: 30px;
+      background-color: var(--theme-beige);
+      border: 2px solid #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      color: #111;
+      cursor: default;
+      box-shadow: 2px 2px 0 #111;
+    }
+    
+    .os-btn-group {
+      display: flex;
+      gap: 5px;
+    }
+
+    /* 창 내부 컨텐츠 영역 */
+    .os-content {
+      padding: 40px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    /* 상단 헤더 및 필터 영역 */
+    .header-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 { 
+      color: var(--theme-navy); 
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin: 0 0 20px 0;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+
+    /* 하얀색 필터 박스 래퍼 */
+    .filter-wrapper {
+      background-color: var(--theme-white);
+      padding: 15px 30px;
+      display: inline-flex;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .filter-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    select {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      outline: none;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+
+    /* 검색창 영역 */
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input[type="text"] {
+      padding: 10px 15px 10px 40px;
+      border-radius: 50px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+      width: 200px;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input[type="text"]:focus {
+      border-color: var(--theme-navy);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    /* 게시판(갤러리) 그리드 레이아웃 */
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 개별 자료 카드 디자인 */
+    .card {
+      background: var(--theme-white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    /* 썸네일 대체 영역 */
+    .card-thumbnail {
+      height: 160px;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: rgba(255,255,255,0.8);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* 카드 내용 영역 */
+    .card-content {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      flex-wrap: wrap;
+    }
+    .tag-grade { background-color: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 4px; }
+    .tag-subject { background-color: #f3e5f5; color: #7b1fa2; padding: 4px 8px; border-radius: 4px; }
+    .tag-author-me { background-color: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 4px; }
+    .tag-author-other { background-color: #fff3e0; color: #ef6c00; padding: 4px 8px; border-radius: 4px; }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 10px 0;
+      line-height: 1.4;
+      color: var(--theme-navy);
+    }
+    .card-topic {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+    .card-author {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 15px;
+      text-align: right;
+    }
+
+    /* 링크 버튼 */
+    .btn-link {
+      display: block;
+      text-align: center;
+      background-color: var(--btn-blue);
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .btn-link:hover { background-color: #357abd; }
+    .status-msg { text-align: center; font-size: 20px; color: #666; margin-top: 50px; grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+
+  <!-- 레트로 윈도우 프레임 시작 -->
+  <div class="os-window">
+    <div class="os-titlebar">
+      <div class="os-btn">∨</div>
+      <div class="os-btn-group">
+        <div class="os-btn">─</div>
+        <div class="os-btn">□</div>
+        <div class="os-btn">✕</div>
+      </div>
+    </div>
+
+    <!-- 윈도우 내부 컨텐츠 -->
+    <div class="os-content">
+      <div class="header-container">
+        <h1>내 웹앱 모음집</h1>
+        
+        <!-- 하얀색 필터 박스 -->
+        <div class="filter-wrapper">
+          <div class="filter-group">
+            <select id="authorFilter">
+              <option value="all">전체 (내가/남이)</option>
+            </select>
+            <select id="gradeFilter">
+              <option value="all">전체 학년</option>
+            </select>
+            <select id="subjectFilter">
+              <option value="all">전체 과목</option>
+            </select>
+            
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="topicSearch" placeholder="이름 또는 주제 검색...">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="loading" class="status-msg">자료를 불러오는 중입니다...⏳</div>
+      <div id="gallery" class="gallery-container"></div>
+    </div>
+  </div>
+
+  <script>
+    // 🔒 1. 보안 스크립트: 우클릭 및 키보드 단축키 차단
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('keydown', event => {
+      if (event.keyCode === 123 || 
+         (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || 
+         (event.ctrlKey && (event.keyCode === 85 || event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 80))) { 
+        event.preventDefault();
+      }
+    });
+
+    // ✅ 적용 완료된 구글 시트 웹 앱 URL
+    const API_URL = "https://script.google.com/macros/s/AKfycbxeI1rNX_2s-8HuTBWt1r4d-rO576AxJ0snQ_M5NosyY8Ep0ZB0B4o3zXKTw_ER8jkT/exec";
+    let allData = [];
+
+    // 시트 열 이름 매칭 도우미 함수
+    function getAuthor(item) {
+      const key = Object.keys(item).find(k => k.includes('누가') || k.includes('선생님')) || '';
+      return key && item[key] ? String(item[key]).trim() : '내가';
+    }
+
+    const cacheBuster = "?t=" + new Date().getTime(); 
+    fetch(API_URL + cacheBuster)
+      .then(response => response.json())
+      .then(data => {
+        allData = data.reverse(); 
+        document.getElementById('loading').style.display = 'none';
+        
+        populateFilters(); 
+        renderGallery(allData); 
+      })
+      .catch(error => {
+        document.getElementById('loading').innerText = "데이터를 불러오는데 실패했습니다. API_URL 주소를 확인해주세요.";
+      });
+
+    function populateFilters() {
+      const authors = new Set();
+      const grades = new Set();
+      const subjects = new Set();
+
+      allData.forEach(item => {
+        const author = getAuthor(item);
+        if (author) authors.add(author);
+        if (item['몇 학년 용인가요?']) grades.add(item['몇 학년 용인가요?']);
+        if (item['과목은 무엇인가요?']) subjects.add(item['과목은 무엇인가요?']);
+      });
+
+      const authorFilter = document.getElementById('authorFilter');
+      authors.forEach(a => {
+        const option = document.createElement('option');
+        option.value = a; option.innerText = a;
+        authorFilter.appendChild(option);
+      });
+
+      const gradeFilter = document.getElementById('gradeFilter');
+      grades.forEach(g => {
+        const option = document.createElement('option');
+        option.value = g; option.innerText = g;
+        gradeFilter.appendChild(option);
+      });
+
+      const subjectFilter = document.getElementById('subjectFilter');
+      subjects.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s; option.innerText = s;
+        subjectFilter.appendChild(option);
+      });
+    }
+
+    function renderGallery(data) {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = ''; 
+
+      if (data.length === 0) {
+        gallery.innerHTML = '<div class="status-msg">조건에 맞는 자료가 없습니다. 텅~</div>';
+        return;
+      }
+
+      data.forEach(item => {
+        const titleKey = Object.keys(item).find(k => k.includes('이름') && !k.includes('선생님')) || '';
+        const title = titleKey && item[titleKey] ? item[titleKey] : '제목 없음';
+        
+        const grade = item['몇 학년 용인가요?'] || '공통';
+        const subject = item['과목은 무엇인가요?'] || '공통';
+        
+        const topicKey = Object.keys(item).find(k => k.includes('주제')) || '';
+        const topic = topicKey ? item[topicKey] : '';
+        
+        const author = getAuthor(item);
+        const authorTagClass = author === '내가' ? 'tag-author-me' : 'tag-author-other';
+
+        const fileKey = Object.keys(item).find(k => k.includes('업로드') && !k.includes('썸네일')) || '';
+        const linkKey = Object.keys(item).find(k => k.includes('링크')) || '';
+        let linkUrl = item[linkKey] || item[fileKey] || '#';
+
+        const thumbKey = Object.keys(item).find(k => k.includes('썸네일')) || '';
+        let thumbHtml = `<div class="card-thumbnail">${subject}</div>`; 
+        
+        if (thumbKey && item[thumbKey]) {
+          const fileUrls = item[thumbKey].toString().split(',')[0].trim();
+          const fileIdMatch = fileUrls.match(/id=([^&]+)/) || fileUrls.match(/d\/([a-zA-Z0-9-_]+)/);
+          
+          if (fileIdMatch && fileIdMatch[1]) {
+            const imageSrc = `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w600`;
+            thumbHtml = `<div class="card-thumbnail" style="background-image: url('${imageSrc}'); color: transparent;"></div>`;
+          } else if (fileUrls.startsWith('http')) {
+            thumbHtml = `<div class="card-thumbnail" style="background-image: url('${fileUrls}'); color: transparent;"></div>`;
+          }
+        }
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          ${thumbHtml}
+          <div class="card-content">
+            <div class="tags">
+              <span class="${authorTagClass}">${author}</span>
+              <span class="tag-grade">${grade}</span>
+              <span class="tag-subject">${subject}</span>
+            </div>
+            <h3 class="card-title">${title}</h3>
+            <div class="card-topic">📝 ${topic}</div>
+            <div class="card-author">출처: ${author}</div>
+            <a href="${linkUrl}" target="_blank" class="btn-link" ${linkUrl === '#' ? 'style="background:#ccc; cursor:not-allowed;" onclick="return false;"' : ''}>
+              ${linkUrl === '#' ? '링크 없음' : '사이트 열기'}
+            </a>
+          </div>
+        `;
+        gallery.appendChild(card);
+      });
+    }
+
+    function filterData() {
+      const selectedAuthor = document.getElementById('authorFilter').value;
+      const selectedGrade = document.getElementById('gradeFilter').value;
+      const selectedSubject = document.getElementById('subjectFilter').value;
+      const searchKeyword = document.getElementById('topicSearch').value.toLowerCase().trim();
+
+      const filtered = allData.filter(item => {
+        const author = getAuthor(item);
+        const matchAuthor = selectedAuthor === 'all' || author === selectedAuthor;
+        const matchGrade = selectedGrade === 'all' || item['몇 학년 용인가요?'] === selectedGrade;
+        const matchSubject = selectedSubject === 'all' || item['과목은 무엇인가요?'] === selectedSubject;
+        
+        const topicKey = Object.keys(item).find(k => k.includes('주제')) || '';
+        const topicText = topicKey && item[topicKey] ? String(item[topicKey]).toLowerCase() : '';
+        const titleKey = Object.keys(item).find(k => k.includes('이름') && !k.includes('선생님')) || '';
+        const titleText = titleKey && item[titleKey] ? String(item[titleKey]).toLowerCase() : '';
+        
+        const matchKeyword = searchKeyword === '' || topicText.includes(searchKeyword) || titleText.includes(searchKeyword);
+
+        return matchAuthor && matchGrade && matchSubject && matchKeyword;
+      });
+
+      renderGallery(filtered);
+    }
+
+    document.getElementById('authorFilter').addEventListener('change', filterData);
+    document.getElementById('gradeFilter').addEventListener('change', filterData);
+    document.getElementById('subjectFilter').addEventListener('change', filterData);
+    document.getElementById('topicSearch').addEventListener('input', filterData);
+
+  </script>
+</body>
+</html>
